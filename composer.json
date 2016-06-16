@@ -1,0 +1,15 @@
+{
+    "name": "dcms/pages",
+    "description": "Pages module",
+    "require": {
+        "baum/baum": "^1.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "web",
+            "email": "web@groupdc.be"
+        }
+    ],
+    "minimum-stability": "dev"
+}
