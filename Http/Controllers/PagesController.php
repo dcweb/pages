@@ -144,7 +144,7 @@ class PagesController extends Controller {
 			$theParent = null;
 			//find root ellement
 			if(Input::has("parent_id") && intval(Input::get("parent_id"))>0 ){
-				$theParent = Page::find(Input::get("parent_id"));
+				$theParent = Pages::find(Input::get("parent_id"));
 			}
 
 			if(is_null($theParent)){
