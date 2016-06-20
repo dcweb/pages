@@ -6,7 +6,7 @@
       <h1>Pages</h1>
       <ol class="breadcrumb">
         <li><a href="{!! URL::to('admin/dashboard') !!}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li><a href="{!! URL::to('admin/pages') !!}"><i class="fa fa-pencil"></i> pages</a></li>
+        <li><a href="{!! URL::to('admin/pages') !!}"><i class="fa fa-file"></i> Pages</a></li>
         @if(isset($page))
 					 	<li class="active">Edit</li>
         @else

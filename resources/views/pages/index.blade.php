@@ -6,7 +6,7 @@
       <h1>Pages</h1>
       <ol class="breadcrumb">
         <li><a href="{!! URL::to('admin/dashboard') !!}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active"><i class="fa fa-pencil"></i> Pages</li>
+        <li class="active"><i class="fa fa-file"></i> Pages</li>
       </ol>
     </div>
 
