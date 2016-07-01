@@ -156,6 +156,7 @@ class PagesController extends Controller {
 			$Page->language_id 		= Input::get('language_id');
 			$Page->title 					= Input::get("title");
 			$Page->body 					= Input::get("body");
+			$Page->thumbnail			= Input::get("thumbnail");
 
 			$Page->url_slug 			= str_slug(Input::get("title"));
 			$Page->url_path 			= str_slug(Input::get("title"));
@@ -238,13 +239,13 @@ class PagesController extends Controller {
 			$Page->language_id 		= Input::get('language_id');
 			$Page->title 					= Input::get("title");
 			$Page->body 					= Input::get("body");
+			$Page->thumbnail			= Input::get("thumbnail");
 
 			$Page->url_slug 			= str_slug(Input::get("title"));
 			$Page->url_path 			= str_slug(Input::get("title"));
 
 			$Page->admin 				= Auth::guard('dcms')->user()->username;
 			$Page->save();
-
 
 			$setRoot = false;
 			$theParent = null;

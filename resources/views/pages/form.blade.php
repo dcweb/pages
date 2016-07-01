@@ -65,6 +65,17 @@
               </div>
 
               <div class="form-group">
+               {!! Form::label('thumbnail', 'Thumbnail') !!}
+
+               <div class="input-group">
+                   {!! Form::text('thumbnail', Input::old('thumbnail'), array('class' => 'form-control')) !!}
+                 <span class="input-group-btn">
+                   {!! Form::button('Browse Server', array('class' => 'btn btn-primary browse-server', 'id'=>'browse_thumbnail')) !!}
+                 </span>
+               </div>
+             </div>
+
+              <div class="form-group">
                 {!! Form::label('body', 'Body') !!}
                 {!! Form::textarea('body', null, array('class' => 'form-control')) !!}
               </div>
