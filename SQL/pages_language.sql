@@ -31,8 +31,8 @@ CREATE TABLE `pages_language` (
   `url_path` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url_slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `admin` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NULL DEFAULT null,
+  `updated_at` timestamp NULL DEFAULT null,
   `_oldpageid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `i_Parent` (`parent_id`)
