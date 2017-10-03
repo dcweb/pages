@@ -29,7 +29,7 @@ class PagesServiceprovider extends ServiceProvider{
     //  __DIR__.'/config/auth.php' => config_path('dcms/pages/auth.php'),
       __DIR__.'/config/dcms_sidebar.php' => config_path('dcms/pages/dcms_sidebar.php'),
    ]);
-
+    
     $this->app['config']['dcms_sidebar'] =  array_replace_recursive($this->app["config"]["dcms_sidebar"], config('dcms.pages.dcms_sidebar'));
     //$this->app['config']['auth'] = array_replace_recursive($this->app["config"]["auth"], config('dcms.pages.auth'));
  }

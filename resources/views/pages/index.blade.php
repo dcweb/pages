@@ -23,17 +23,33 @@
 
     <h2>Overview</h2>
 
- {!! Datatable::table()
-    ->setId('datatable')
-    ->addColumn('Page')
-    ->addColumn('Country')
-		->addColumn('')
-    ->setUrl(route('admin/pages/api/table'))
-    ->setOptions(array(
-        'pageLength' => 50,
-        ))
-    ->render() !!}
 
+        <table id="datatable" class="table table-hover table-condensed" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Page</th>
+                    <th>Regio</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            oTable = $('#datatable').DataTable({
+                "pageLength": 50,
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('admin.pages.api.table') }}",
+                "columns": [
+                    {data: 'page', name: 'page'},
+                    {data: 'regio', name: 'regio', searchable: false},
+                    {data: 'edit', name: 'edit', orderable: false, searchable: false}
+                ]
+            });
+        });
+    </script>
 
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.css">
 

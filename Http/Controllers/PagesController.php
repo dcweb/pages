@@ -15,7 +15,7 @@ use Session;
 use Validator;
 use Redirect;
 use DB;
-use Datatable;
+use Datatables;
 use Auth;
 use DateTime;
 use Config;
@@ -79,7 +79,7 @@ class PagesController extends Controller {
 
 	public function getDatatable()
 	{
-		return Datatable::query(DB::connection('project')
+		return Datatables::queryBuilder(DB::connection('project')
 																		->table('pages_language as node')
 																		->select(
 																							(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
@@ -90,13 +90,12 @@ class PagesController extends Controller {
 																		->orderBy('node.lft')
 																		)
 
-																	->showColumns('page','regio')
 																	->addColumn('edit',function($model){return '<form method="POST" action="/admin/pages/'.$model->id.'" accept-charset="UTF-8" class="pull-right"> <input name="_token" type="hidden" value="'.csrf_token().'"> <input name="_method" type="hidden" value="DELETE">
 																			<a class="btn btn-xs btn-default" href="/admin/pages/'.$model->id.'/edit"><i class="fa fa-pencil"></i></a>
 																			<button class="btn btn-xs btn-default" type="submit" value="Delete this article" onclick="if(!confirm(\'Are you sure to delete this item?\')){return false;};"><i class="fa fa-trash-o"></i></button>
 																		</form>';})
-																	->searchColumns('node.title')
-																	->make();
+																	->rawColumns(['regio','edit'])
+																	->make(true);
 	}
 
 
