@@ -89,16 +89,16 @@
       </div>
     </div>
 
-<script type="text/javascript" src="{!! asset('/ckeditor/ckeditor.js') !!}"></script>
-<script type="text/javascript" src="{!! asset('/ckeditor/adapters/jquery.js') !!}"></script>
-<script type="text/javascript" src="{!! asset('/ckfinder/ckfinder.js') !!}"></script>
-<script type="text/javascript" src="{!! asset('/ckfinder/ckbrowser.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('/packages/dcms/core/ckeditor/ckeditor.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('/packages/dcms/core/ckeditor/adapters/jquery.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('/packages/dcms/core/ckfinder/ckfinder.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('/packages/dcms/core/ckfinder/ckbrowser.js') !!}"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
 
 	//CKFinder for CKEditor
-	CKFinder.setupCKEditor( null, '/ckfinder/' );
+	CKFinder.setupCKEditor( null, '/packages/dcms/core/ckfinder/' );
 
 	//CKFinder
 	$(".browse-server").click(function() {
@@ -192,5 +192,5 @@ $(document).ready(function() {
 
 </script>
 
-<script type="text/javascript" src="{!! asset('packages/dcweb/dcms/assets/js/bootstrap.min.js') !!}"></script>
+<script type="text/javascript" src="{!! asset('packages/dcms/core/assets/js/bootstrap.min.js') !!}"></script>
 @stop

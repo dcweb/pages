@@ -23,15 +23,13 @@ class PagesServiceprovider extends ServiceProvider{
    $this->setupRoutes($this->app->router);
    // this  for conig
    $this->publishes([
-      //// __DIR__.'/config/contact.php' => config_path('contact.php'),
-      //__DIR__.'/resources/views' => resource_path('views/vendor/dcms/core'),
-      __DIR__.'/public/assets' => public_path('packages/dcms/pages'),
-    //  __DIR__.'/config/auth.php' => config_path('dcms/pages/auth.php'),
+     // __DIR__.'/public/assets' => public_path('packages/dcms/pages'),
       __DIR__.'/config/dcms_sidebar.php' => config_path('dcms/pages/dcms_sidebar.php'),
    ]);
-    
-    $this->app['config']['dcms_sidebar'] =  array_replace_recursive($this->app["config"]["dcms_sidebar"], config('dcms.pages.dcms_sidebar'));
-    //$this->app['config']['auth'] = array_replace_recursive($this->app["config"]["auth"], config('dcms.pages.auth'));
+
+    if(!is_null(config('dcms.pages'))){
+        $this->app['config']['dcms_sidebar'] =  array_replace_recursive($this->app["config"]["dcms_sidebar"], config('dcms.pages.dcms_sidebar'));
+    }
  }
  /**
   * Define the routes for the application.
