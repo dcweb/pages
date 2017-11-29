@@ -40,7 +40,7 @@
                 @foreach($languages as $O)
                 <fieldset class="float-left">
                 	{!! Form::radio('language_id', $O->thelanguage_id , (isset($page) && $page->language_id == $O->thelanguage_id ? true: false), array('class' => 'radiolanguage','id'=>'language_id'.$O->thelanguage_id)) !!}
-                  {!! Html::decode(Form::label( 'language_id'.$O->thelanguage_id, ' <img src="/packages/dcms/core/images/flag-'.$O->country. '.png"> - ' .$O->language, array('class' => ''))) !!}
+                  {!! Html::decode(Form::label( 'language_id'.$O->thelanguage_id, ' <img src="/packages/dcms/core/images/flag-'.strtolower($O->country). '.png"> - ' .$O->language, array('class' => ''))) !!}
                 </fieldset>
                 @endforeach
 
