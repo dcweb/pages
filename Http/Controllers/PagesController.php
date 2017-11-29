@@ -33,7 +33,7 @@ class PagesController extends Controller {
 																					"node.parent_id",
 																					"node.language_id",
 																					"node.depth",
-																					(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",country,".png\' >") as regio'))
+																					(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",lcase(country),".png\' >") as regio'))
 																				)
 																->leftJoin('languages','node.language_id','=','languages.id')
 																->orderBy('node.lft')
@@ -84,7 +84,7 @@ class PagesController extends Controller {
 																		->select(
 																							(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
 																							"node.id",
-																							(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",country,".png\' >") as regio'))
+																							(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",lcase(country),".png\' >") as regio'))
 																						)
 																		->leftJoin('languages','node.language_id','=','languages.id')
 																		->orderBy('node.lft')
