@@ -3,7 +3,6 @@
 namespace Dcms\Pages\Http\Controllers;
 
 use Dcms\Pages\Models\Pages;
-//use Dcweb\Dcms\Models\Pages\Pagetree;
 use Dcms\Pages\Models\Detail;
 use Dcms\Core\Models\Languages\Language;
 
@@ -23,47 +22,46 @@ use Config;
 
 class PagesController extends Controller {
 
-		public static function QueryTree()
-		{
-			$tree = DB::connection('project')
-																->table('pages_language as node')
-																->select(
-																					(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
-																					"node.id",
-																					"node.parent_id",
-																					"node.language_id",
-																					"node.depth",
-																					(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",lcase(country),".png\' >") as regio'))
-																				)
-																->leftJoin('languages','node.language_id','=','languages.id')
-																->orderBy('node.lft')
-															->get();
-			return $tree;
-		}
+	public static function QueryTree()
+	{
+		$tree = DB::connection('project')
+							->table('pages_language as node')
+							->select(
+										(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
+										"node.id",
+										"node.parent_id",
+										"node.language_id",
+										"node.depth",
+										(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",country,".png\' >") as regio'))
+									)
+							->leftJoin('languages','node.language_id','=','languages.id')
+							->orderBy('node.lft')
+						->get();
+		return $tree;
+	}
 
-		public static function CategoryDropdown($models = null,$selected_id = null, $enableNull = true, $name="parent_id", $key = "id",$value="page")
-		{
-			$dropdown = "empty set";
-			if(!is_null($models) && count($models)>0)
-			{
-				$dropdown = '<select name="'.$name.'" class="form-control" id="parent_id">'."\r\n";
+	public static function CategoryDropdown($models = null,$selected_id = null, $enableNull = true, $name="parent_id", $key = "id",$value="page")
+	{
+		$dropdown = "empty set";
+		if (!is_null($models) && count($models)>0) {
+			$dropdown = '<select name="'.$name.'" class="form-control" id="parent_id">'."\r\n";
 
-				if($enableNull == true)	$dropdown .= '<option value="">None</option>'; //epty value will result in NULL database value;
-
-				foreach($models as $model)
-				{
-					$selected = "";
-					if(!is_null($selected_id) && $selected_id == $model->$key) $selected = "selected";
-
-					//altering these tag properties can affect the form (jQuery)
-					$dropdown .= '<option '.$selected.' value="'.$model->$key.'" class="'.$name.' language_id'.$model->language_id.' parent-'.(is_null($model->parent_id)?0:$model->parent_id).' depth-'.$model->depth.'">'.$model->$value.'</option>'."\r\n";
-				}
-				$dropdown .= '</select>'."\r\n"."\r\n";
+			if ($enableNull == true) {
+				$dropdown .= '<option value="">None</option>'; //epty value will result in NULL database value;
 			}
-			return $dropdown;
+
+			foreach($models as $model) {
+				$selected = "";
+				if (!is_null($selected_id) && $selected_id == $model->$key) {
+					$selected = "selected";
+				}
+
+				$dropdown .= '<option '.$selected.' value="'.$model->$key.'" class="'.$name.' language_id'.$model->language_id.' parent-'.(is_null($model->parent_id)?0:$model->parent_id).' depth-'.$model->depth.'">'.$model->$value.'</option>'."\r\n";
+			}
+			$dropdown .= '</select>'."\r\n"."\r\n";
 		}
-
-
+		return $dropdown;
+	}
 
 	/**
 	 * Display a listing of the resource.
@@ -76,26 +74,25 @@ class PagesController extends Controller {
 		return View::make('dcms::pages/index');
 	}
 
-
 	public function getDatatable()
 	{
 		return Datatables::queryBuilder(DB::connection('project')
-																		->table('pages_language as node')
-																		->select(
-																							(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
-																							"node.id",
-																							(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",lcase(country),".png\' >") as regio'))
-																						)
-																		->leftJoin('languages','node.language_id','=','languages.id')
-																		->orderBy('node.lft')
-																		)
+											->table('pages_language as node')
+											->select(
+																(DB::connection("project")->raw("CONCAT( REPEAT( '-', node.depth ), node.title) AS page")),
+																"node.id",
+																(DB::connection("project")->raw('Concat("<img src=\'/packages/dcms/core/images/flag-",country,".png\' >") as regio'))
+															)
+											->leftJoin('languages','node.language_id','=','languages.id')
+											->orderBy('node.lft')
+											)
 
-																	->addColumn('edit',function($model){return '<form method="POST" action="/admin/pages/'.$model->id.'" accept-charset="UTF-8" class="pull-right"> <input name="_token" type="hidden" value="'.csrf_token().'"> <input name="_method" type="hidden" value="DELETE">
-																			<a class="btn btn-xs btn-default" href="/admin/pages/'.$model->id.'/edit"><i class="fa fa-pencil"></i></a>
-																			<button class="btn btn-xs btn-default" type="submit" value="Delete this article" onclick="if(!confirm(\'Are you sure to delete this item?\')){return false;};"><i class="fa fa-trash-o"></i></button>
-																		</form>';})
-																	->rawColumns(['regio','edit'])
-																	->make(true);
+							->addColumn('edit',function($model){return '<form method="POST" action="/admin/pages/'.$model->id.'" accept-charset="UTF-8" class="pull-right"> <input name="_token" type="hidden" value="'.csrf_token().'"> <input name="_method" type="hidden" value="DELETE">
+									<a class="btn btn-xs btn-default" href="/admin/pages/'.$model->id.'/edit"><i class="fa fa-pencil"></i></a>
+									<button class="btn btn-xs btn-default" type="submit" value="Delete this article" onclick="if(!confirm(\'Are you sure to delete this item?\')){return false;};"><i class="fa fa-trash-o"></i></button>
+								</form>';})
+							->rawColumns(['regio','edit'])
+							->make(true);
 	}
 
 
@@ -108,12 +105,10 @@ class PagesController extends Controller {
 	{
 		$languages =  DB::connection("project")->table("languages")->select((DB::connection("project")->raw("'' as title, '' as parent_id, '' as body")), "id","id as thelanguage_id",  "language","country","language_name")->get();
 
-		// load the create form (app/views/articles/create.blade.php)
 		return View::make('dcms::pages/form')
 					->with('languages',$languages)
 					->with('pageOptionValues',$this->CategoryDropdown($this->QueryTree()));
 	}
-
 
 	/**
 	 * Store a newly created resource in storage.
@@ -122,13 +117,7 @@ class PagesController extends Controller {
 	 */
 	public function store()
 	{
-		//$Languages = Language::all();
 		$rules = array('language_id'=>'required|integer','title'=>'required');
-/*		foreach($Languages as $Lang)
-		{
-			$rules['title.'.$Lang->id] = 'required';
-		}
-*/
 		$validator = Validator::make(Input::all(), $rules);
 
 		// process the validator
@@ -136,47 +125,46 @@ class PagesController extends Controller {
 			return Redirect::to('admin/pages/create')
 				->withErrors($validator)
 				->withInput();
-				//->withInput(Input::except());
 		} else {
-			// store
-
 			$theParent = null;
-			//find root ellement
-			if(Input::has("parent_id") && intval(Input::get("parent_id"))>0 ){
+			if (Input::has("parent_id") && intval(Input::get("parent_id"))>0 ) {
 				$theParent = Pages::find(Input::get("parent_id"));
 			}
 
-			if(is_null($theParent)){
+			$prefix = "";
+			if (is_null($theParent)) {
 				//$theParent = Category::where('language_id','=',Input::get("language_id"))->where('depth','=','0')->first();
+			} elseif ($theParent->depth > 0) {
+				$prefix = $theParent->url_path.'/'; 
 			}
 
 			$Page = new Pages;
+			$Page->language_id 	= Input::get('language_id');
+			$Page->title 		= Input::get("title");
+			$Page->body 		= Input::get("body");
+			$Page->thumbnail	= Input::get("thumbnail");
 
-			$Page->language_id 		= Input::get('language_id');
-			$Page->title 					= Input::get("title");
-			$Page->body 					= Input::get("body");
-			$Page->thumbnail			= Input::get("thumbnail");
+			$Page->url_slug 	= str_slug(Input::get("title"));
+			$Page->url_path 	= $prefix.str_slug(Input::get("title"));
 
-			$Page->url_slug 			= str_slug(Input::get("title"));
-			$Page->url_path 			= str_slug(Input::get("title"));
-
-			$Page->admin 				= Auth::guard('dcms')->user()->username;
+			$Page->admin 		= Auth::guard('dcms')->user()->username;
 			$Page->save();
 
-			if(is_null($theParent)){
+			if (is_null($theParent)) {
 				$Page->makeRoot();
 			} else {
 				$Page->makeChildOf($theParent);
 			}
 
-			if(Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0)	$Page->moveToLeftOf(intval(Input::get('nexttosiblingid')));
+			if (Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0) {
+				$Page->moveToLeftOf(intval(Input::get('nexttosiblingid')));
+			}
 
 			// redirect
 			Session::flash('message', 'Successfully created page!');
 			return Redirect::to('admin/pages');
 		}
 	}
-
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -186,25 +174,25 @@ class PagesController extends Controller {
 	 */
 	public function edit($id)
 	{
-			// get the Page
-			$page = Pages::find($id);
+		// get the Page
+		$page = Pages::find($id);
 
-		 	$languages = DB::connection("project")->select('
-													SELECT language_id as thelanguage_id, languages.language, languages.country, languages.language_name, pages_language.parent_id, pages_language.id,  title,  body
-													FROM pages_language
-													LEFT JOIN languages on languages.id = pages_language.language_id
-													WHERE  languages.id is not null AND  pages_language.id = ?
-													UNION
-													SELECT languages.id , language, country, language_name, \'\' , \'\' ,  \'\' , \'\'
-													FROM languages
-													WHERE id NOT IN (SELECT language_id FROM pages_language WHERE id = ?) ORDER BY 1
-													', array($id,$id));
+		$languages = DB::connection("project")->select('
+												SELECT language_id as thelanguage_id, languages.language, languages.country, languages.language_name, pages_language.parent_id, pages_language.id,  title,  body
+												FROM pages_language
+												LEFT JOIN languages on languages.id = pages_language.language_id
+												WHERE  languages.id is not null AND  pages_language.id = ?
+												UNION
+												SELECT languages.id , language, country, language_name, \'\' , \'\' ,  \'\' , \'\'
+												FROM languages
+												WHERE id NOT IN (SELECT language_id FROM pages_language WHERE id = ?) ORDER BY 1
+												', array($id,$id));
 
-			// show the edit form and pass the nerd
-			return View::make('dcms::pages/form')
-				->with('page', $page)
-				->with('languages', $languages)
-				->with('pageOptionValues',$this->CategoryDropdown($this->QueryTree(),$page->parent_id));
+		// show the edit form and pass the nerd
+		return View::make('dcms::pages/form')
+			->with('page', $page)
+			->with('languages', $languages)
+			->with('pageOptionValues',$this->CategoryDropdown($this->QueryTree(),$page->parent_id));
 	}
 
 
@@ -216,15 +204,19 @@ class PagesController extends Controller {
 	 */
 	public function update($id)
 	{
-		// validate
-		// read more on validation at http://laravel.com/docs/validation
 		$rules = array('language_id'=>'required|integer','title'=>'required');
-	/*	foreach($Languages as $Lang)
-		{
-			$rules['title.'.$Lang->id] = 'required';
-		}
-*/
 		$validator = Validator::make(Input::all(), $rules);
+
+		$theParent = null;
+		if (Input::has("parent_id") && intval(Input::get("parent_id")) > 0 ) {
+			$theParent = Pages::find(Input::get("parent_id"));
+		}
+		$prefix = "";
+		if (is_null($theParent)) {
+			//$theParent = Category::where('language_id','=',Input::get("language_id"))->where('depth','=','0')->first();
+		} elseif ($theParent->depth > 0) {
+			$prefix = $theParent->url_path.'/'; 
+		}
 
 		// process the login
 		if ($validator->fails()) {
@@ -235,48 +227,53 @@ class PagesController extends Controller {
 			// store
 			$Page = Pages::find($id);
 
-			$Page->language_id 		= Input::get('language_id');
-			$Page->title 					= Input::get("title");
-			$Page->body 					= Input::get("body");
-			$Page->thumbnail			= Input::get("thumbnail");
+			$Page->language_id 	= Input::get('language_id');
+			$Page->title 		= Input::get("title");
+			$Page->body 		= Input::get("body");
+			$Page->thumbnail	= Input::get("thumbnail");
 
-			$Page->url_slug 			= str_slug(Input::get("title"));
-			$Page->url_path 			= str_slug(Input::get("title"));
+			$Page->url_slug 	= str_slug(Input::get("title"));
+			$Page->url_path 	= $prefix.str_slug(Input::get("title"));
 
-			$Page->admin 				= Auth::guard('dcms')->user()->username;
+			$Page->admin 		= Auth::guard('dcms')->user()->username;
 			$Page->save();
 
 			$setRoot = false;
 			$theParent = null;
 			$moveParent = true;
 
-			if( intval(Input::get('parent_id')) > 0 &&  Input::get('parent_id') <> $Page->parent_id) {
-				//move to a new parentid
+			if (intval(Input::get('parent_id')) > 0 &&  Input::get('parent_id') <> $Page->parent_id) {
 				$moveParent = true;
 				$theParent = Pages::find(Input::get("parent_id"));
-			}elseif(intval(Input::get('parent_id')) <= 0  &&  Input::get('parent_id') <> $Page->parent_id) {
-				//move to a ROOT of the same, or other language
+			} elseif (intval(Input::get('parent_id')) <= 0  &&  Input::get('parent_id') <> $Page->parent_id) {
 				$moveParent = true;
-				//$theParent = Category::where('language_id','=',Input::get("language_id"))->where('depth','=','0')->first();
-				if(is_null($theParent))$setRoot = true;
-			}else{
-				//we stay in the same parent
+				if (is_null($theParent)) {
+					$setRoot = true;
+				}
+			} else {
 				$moveParent = false;
 			}
-			if($setRoot == true) $Page->makeRoot();
-			elseif(!is_null($theParent)) $Page->makeChildOf($theParent);
 
-			if($moveParent == false && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0 && Input::get("oldsort") < Input::get("sort")) $Page->moveToRightOf(intval(Input::get('nexttosiblingid')));
-			elseif($moveParent == false && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0  && Input::get("oldsort") > Input::get("sort"))	$Page->moveToLeftOf(intval(Input::get('nexttosiblingid')));
-			elseif($moveParent == false && Input::get("oldsort") < Input::get("sort") ) $Page->makeLastChildOf($Page->parent_id);
-			elseif($moveParent == true && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0 ) $Page->moveToRightOf(intval(Input::get('nexttosiblingid')));
+			if ($setRoot == true) {
+				$Page->makeRoot();
+			} elseif(!is_null($theParent)) {
+				$Page->makeChildOf($theParent);
+			}
 
-			// redirect
+			if ($moveParent == false && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0 && Input::get("oldsort") < Input::get("sort")) {
+				$Page->moveToRightOf(intval(Input::get('nexttosiblingid')));
+			} elseif ($moveParent == false && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0  && Input::get("oldsort") > Input::get("sort")) {
+				$Page->moveToLeftOf(intval(Input::get('nexttosiblingid')));
+			} elseif ($moveParent == false && Input::get("oldsort") < Input::get("sort") ) {
+				$Page->makeLastChildOf($Page->parent_id);
+			} elseif ($moveParent == true && Input::has('nexttosiblingid') && intval(Input::get('nexttosiblingid'))>0 ) {
+				$Page->moveToRightOf(intval(Input::get('nexttosiblingid')));
+			}
+		
 			Session::flash('message', 'Successfully updated page!');
 			return Redirect::to('admin/pages');
 		}
 	}
-
 
 	/**
 	 * Remove the specified resource from storage.
@@ -286,11 +283,9 @@ class PagesController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		// delete
 		$Page = Pages::find($id);
 		$Page->delete();
 
-		// redirect
 		Session::flash('message', 'Successfully deleted the page!');
 		return Redirect::to('admin/pages');
 	}
