@@ -226,6 +226,7 @@ class PagesController extends Controller {
 		} else {
 			// store
 			$Page = Pages::find($id);
+			$old_url_path = $Page->url_path;
 
 			$Page->language_id 	= Input::get('language_id');
 			$Page->title 		= Input::get("title");
@@ -237,6 +238,8 @@ class PagesController extends Controller {
 
 			$Page->admin 		= Auth::guard('dcms')->user()->username;
 			$Page->save();
+
+			$Page::updateUrlPath($old_url_path,$Page->url_path);
 
 			$setRoot = false;
 			$theParent = null;
